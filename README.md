@@ -12,3 +12,10 @@ This package provides another layer to [org-media-note](https://github.com/yuche
    :straight (org-media-noter :type git :host github :repo "seblemaguer/org-media-noter")
    :commands (org-media-noter))
 ```
+
+## Usage
+
+This package provides 3 commands:
+  - `org-media-noter` which is the equivalent of `org-noter`. It opens a new file or the file pointed by the media property
+  - `org-media-noter-insert-note` to insert a note associated to a dedicated timestamp
+  - `org-media-noter-seek` go to the timestemp pointed by the property

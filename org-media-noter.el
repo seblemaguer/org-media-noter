@@ -4,8 +4,8 @@
 
 ;; Author: Sébastien Le Maguer <lemagues@tcd.ie>
 ;; URL: https://github.com/seblemaguer/org-media-noter
-;; Package-Requires: ((emacs "27.1") (mpv "0.1.0") (pretty-hydra "0.2.2") (org-media-note "1.7.0"))
-;; Version: 0.1
+;; Package-Requires: ((emacs "27.1") (mpv "0.1.0") (org-media-note "1.7.0") (s "1.13.1"))
+;; Version: 0.2
 ;; Keywords: mpv, org, notes, org-roam, convenience
 ;; Homepage:
 
@@ -37,6 +37,7 @@
 (require 'cl-lib)
 (require 'mpv)
 (require 'org-media-note)
+(require 's)
 
 
 ;;;; Customize variables
@@ -68,7 +69,8 @@ when creating a session, if the document is missing."
 
 ;;;; Internals
 (defsubst org-media-noter--check-doc-prop (doc-prop)
-  (and doc-prop (not (file-directory-p doc-prop)) (file-readable-p doc-prop)))
+  (and doc-prop (or (s-starts-with? "https://" doc-prop)
+                 (not (file-directory-p doc-prop)) (file-readable-p doc-prop))))
 
 (defun org-media-noter--get-or-read-document-property (inherit-prop &optional force-new)
   (let ((doc-prop (and (not force-new) (org-entry-get nil org-media-noter-property-doc-file inherit-prop))))
@@ -123,8 +125,12 @@ when creating a session, if the document is missing."
 
   (let* ((media-path (org-media-noter--get-or-read-document-property t nil))
          (start-timestamp (org-entry-get nil org-media-noter-property-note-timestamp nil)))
+    (setq media-path (if (s-starts-with? "https://" media-path)
+                         media-path
+                       (expand-file-name media-path)))
+    (message media-path)
     (if start-timestamp
-        (mpv-start (expand-file-name media-path) (concat "--start=+" start-timestamp))
+        (mpv-start media-path (concat "--start=+" start-timestamp))
       (mpv-play media-path))))
 
 (provide 'org-media-noter)

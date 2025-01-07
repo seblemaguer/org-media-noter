@@ -46,7 +46,7 @@
   :group 'convenience
   :version "25.3.1")
 
-(defcustom org-media-noter-property-doc-file "MEDIA_NOTER_FILE"
+(defcustom org-media-noter-property-doc-source "MEDIA_NOTER_SOURCE"
   "Name of the property that specifies the media file."
   :group 'org-media-noter
   :type 'string)
@@ -73,7 +73,7 @@ when creating a session, if the document is missing."
                  (not (file-directory-p doc-prop)) (file-readable-p doc-prop))))
 
 (defun org-media-noter--get-or-read-document-property (inherit-prop &optional force-new)
-  (let ((doc-prop (and (not force-new) (org-entry-get nil org-media-noter-property-doc-file inherit-prop))))
+  (let ((doc-prop (and (not force-new) (org-entry-get nil org-media-noter-property-doc-source inherit-prop))))
     (unless (org-media-noter--check-doc-prop doc-prop)
       (setq doc-prop nil)
 
@@ -92,7 +92,7 @@ when creating a session, if the document is missing."
         (when (or (file-directory-p doc-prop) (not (file-readable-p doc-prop))) (user-error "Invalid file path"))
         (when (y-or-n-p "Do you want a relative file name? ") (setq doc-prop (file-relative-name doc-prop))))
 
-      (org-entry-put nil org-media-noter-property-doc-file doc-prop))
+      (org-entry-put nil org-media-noter-property-doc-source doc-prop))
     doc-prop))
 
 

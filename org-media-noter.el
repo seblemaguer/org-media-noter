@@ -37,6 +37,7 @@
 (require 'cl-lib)
 (require 'mpv)
 (require 'org-media-note)
+(require 'org-attach)
 (require 's)
 
 
